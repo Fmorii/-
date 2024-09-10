@@ -36,3 +36,26 @@ print(f"The conditional entropy H(X) is: {h_x:.4f}")
 
 h_x_y = -np.sum(joint_prob_matrix * np.log2(joint_prob_matrix, where=(joint_prob_matrix > 0)))    # *元素相乘
 print(f"The conditional entropy H(X,Y) is: {h_x_y:.4f}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
