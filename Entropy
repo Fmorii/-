@@ -1,0 +1,38 @@
+import numpy as np
+
+def conditional_entropy(joint_prob_matrix, axis):
+
+    joint_prob_matrix = np.array(joint_prob_matrix)
+
+    if axis == 0:  # H(X|Y)
+        p_y = np.sum(joint_prob_matrix, axis=0, keepdims=True)
+        p_y = np.where(p_y == 0, 1e-10, p_y)    # np.where(condition, x, y)
+        conditional_prob_matrix = joint_prob_matrix / p_y
+        cond_entropy = -np.sum(joint_prob_matrix * np.log2(conditional_prob_matrix, where=(conditional_prob_matrix > 0)))
+    elif axis == 1:  # H(Y|X)
+        p_x = np.sum(joint_prob_matrix, axis=1, keepdims=True)
+        p_x = np.where(p_x == 0, 1e-10, p_x)
+        conditional_prob_matrix = joint_prob_matrix / p_x
+        cond_entropy = -np.sum(joint_prob_matrix * np.log2(conditional_prob_matrix, where=(conditional_prob_matrix > 0)))
+    else:
+        raise ValueError("Axis must be 0 (for H(X|Y)) or 1 (for H(Y|X)).")
+
+    return cond_entropy
+
+joint_prob_matrix = np.array([[1/8, 1/16, 1/32, 1/32],
+                              [1/16, 1/8, 1/32, 1/32],
+                              [1/16, 1/16, 1/16, 1/16],
+                              [1/4, 0, 0, 0]])
+
+h_x_given_y = conditional_entropy(joint_prob_matrix, axis=0)
+print(f"The conditional entropy H(X|Y) is: {h_x_given_y:.4f}")
+h_y = -np.sum(np.sum(joint_prob_matrix, axis=0) * np.log2(np.sum(joint_prob_matrix, axis=0), where=(np.sum(joint_prob_matrix) > 0)))
+print(f"The conditional entropy H(Y) is: {h_y:.4f}")
+
+h_y_given_x = conditional_entropy(joint_prob_matrix, axis=1)
+print(f"The conditional entropy H(Y|X) is: {h_y_given_x:.4f}")
+h_x = -np.sum(np.sum(joint_prob_matrix, axis=1) * np.log2(np.sum(joint_prob_matrix, axis=1), where=(np.sum(joint_prob_matrix) > 0)))
+print(f"The conditional entropy H(X) is: {h_x:.4f}")
+
+h_x_y = -np.sum(joint_prob_matrix * np.log2(joint_prob_matrix, where=(joint_prob_matrix > 0)))    # *元素相乘
+print(f"The conditional entropy H(X,Y) is: {h_x_y:.4f}")
